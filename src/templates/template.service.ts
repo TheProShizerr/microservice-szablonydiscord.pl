@@ -25,7 +25,7 @@ export class TemplateService {
       await this.audioQueue.add('template-scan', element, { delay: 1500 });
     }
 
-    this.template.toggleQueue();
+    this.template.toggleQueue = true;
 
     return 'all items added to queue';
   }

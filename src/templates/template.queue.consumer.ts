@@ -13,9 +13,10 @@ import { Inject } from '@nestjs/common';
 })
 export class TemplateConsumer extends WorkerHost {
   private canProcessQueue = false;
+  private length = 0;
 
-  toggleQueue(): void {
-    this.canProcessQueue = true;
+  set toggleQueue(value: boolean) {
+    this.canProcessQueue = value;
   }
 
   constructor(
@@ -28,6 +29,7 @@ export class TemplateConsumer extends WorkerHost {
   async process(job: Job<any, any, string>): Promise<void> {
     if (!this.canProcessQueue) return;
     let baseRef = this.admin.database().ref(`Template/box/${job.data.ID}`);
+
     try {
       const codeTemplate = job.data.link.split('https://discord.new/')[1];
       const response = await lastValueFrom(
@@ -40,6 +42,7 @@ export class TemplateConsumer extends WorkerHost {
 
       console.log(
         `${job.data.ID} -> ${response.data.name} (${response.data.usage_count})`,
+        ++this.length,
       );
     } catch (err) {
       if (err.response?.status === 429) {

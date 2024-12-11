@@ -13,6 +13,8 @@ import { HttpModule } from '@nestjs/axios';
     BullModule.registerQueue({
       name: 'template-scan',
       defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: true,
         attempts: 5,
         backoff: {
           type: 'fixed',
